@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import axios from 'axios';
 import { getHeader } from '../utils/AuthorizationConfig';
 
@@ -9,6 +9,7 @@ interface RejectOfferDto {
 }
 
 export const useRejectOffer = () => {
+  const queryClient = useQueryClient();
   const rejectOffer = ({ offerId, comment, token }: RejectOfferDto) => {
     if (!token) {
       throw new Error('Missing token');
@@ -23,7 +24,11 @@ export const useRejectOffer = () => {
     );
   };
 
-  const { mutate, isLoading, error } = useMutation(rejectOffer);
+  const { mutate, isLoading, error } = useMutation(rejectOffer, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('demands')
+    }
+  });
 
   return {
     rejectOffer: mutate,

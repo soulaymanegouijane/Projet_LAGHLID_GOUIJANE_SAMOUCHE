@@ -7,7 +7,7 @@ export const useCategories = () => {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API_URL}/categories`,
     );
-    return [{ id: 0, name: 'Tout' }, ...data];
+    return data;
   };
 
   const { data, isLoading, error } = useQuery(

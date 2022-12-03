@@ -18,16 +18,18 @@ import { useDeleteOffer } from '../hooks/useDeleteOffer';
 import { useMyOffers } from '../hooks/useMyOffers';
 import { Filter, Material as MaterialType, MaterialDto, Role } from '../types';
 
+const formInitialValues = {
+  id: '',
+  name: '',
+  description: '',
+  categoryIds: [],
+}
+
 export const MyOffersPage = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [filter, setFilter] = useState(Filter.ALL);
   const [filtredOffers, setFiltredOffers] = useState<MaterialDto[]>([]);
-  const [material, setMaterial] = useState<MaterialType>({
-    id: '',
-    name: '',
-    description: '',
-    categoryIds: [],
-  });
+  const [material, setMaterial] = useState<MaterialType>(formInitialValues);
   const {
     state: {
       auth: { token, user },
@@ -53,9 +55,8 @@ export const MyOffersPage = () => {
       material: { ...material, title: material.name },
       token,
     });
-    refetch();
     setAddModalOpen(false);
-    alert('Offre ajouté');
+    setMaterial(formInitialValues)
   };
 
   useEffect(() => {
@@ -74,6 +75,10 @@ export const MyOffersPage = () => {
         setFiltredOffers([]);
     }
   }, [filter, myOffers]);
+
+  useEffect(() =>{
+    refetch();
+  }, [addModalOpen, material])
 
   return (
     <Box>

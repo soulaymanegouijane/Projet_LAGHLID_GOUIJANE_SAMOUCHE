@@ -16,6 +16,6 @@ public interface DemandRepository extends JpaRepository<Demand, Long> {
     @Query("select count(d) from Demand d where d.member.association.id = ?1 and d.status = ?2")
     Long countByAssociationIdAndDecision(long id, Decision decision);
 
-    @Query("select d from Demand d where d.member.association.id = ?1")
+    @Query("select d from Demand d where d.offer.association.id = ?1")
     List<Demand> findByOfferAssociationId(long id);
 }

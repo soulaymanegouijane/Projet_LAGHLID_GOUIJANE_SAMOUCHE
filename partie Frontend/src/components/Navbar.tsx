@@ -4,6 +4,7 @@ import { VideoLabel, ListAlt } from '@mui/icons-material';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Store } from '../context/Store';
 import { logout } from '../context/actions/authentication';
+import { Role } from '../types';
 
 const links = [{ to: '/', text: 'Offres', icon: <VideoLabel /> }];
 
@@ -31,7 +32,9 @@ export const Navbar = () => {
       setNavLinks(links);
       return;
     }
-    setNavLinks(protectedLinks);
+    if (user.role.includes(Role.ROLE_REPRESENTATIVE)){
+      setNavLinks(protectedLinks);
+    }
   }, [user]);
 
   return (

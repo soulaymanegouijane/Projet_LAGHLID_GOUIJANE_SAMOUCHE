@@ -1,7 +1,7 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import axios from 'axios';
 import { getHeader } from '../utils/AuthorizationConfig';
-
+import  Swal  from "sweetalert2";
 interface AddOfferDto {
   material: {
     title: string;
@@ -12,6 +12,7 @@ interface AddOfferDto {
 }
 
 export const useAddMaterial = () => {
+  const queryClient = useQueryClient();
   const addMaterial = async ({ material, token }: AddOfferDto) => {
     if (!token) {
       throw new Error('No token');
@@ -25,7 +26,18 @@ export const useAddMaterial = () => {
     return data;
   };
 
-  const { mutate, isLoading, error } = useMutation(addMaterial);
+  const { mutate, isLoading, error } = useMutation(addMaterial,{
+    onSuccess: () => {
+      queryClient.invalidateQueries('myOffers')
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Votre offre est ajoutée',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    }
+  });
 
   return {
     mutate,

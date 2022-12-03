@@ -41,6 +41,7 @@ public class OfferServiceImpl implements OfferService {
     public List<OfferResponseModel> retreiveMyOffers() throws MemberNotFoundException {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member connectedMember = memberRepository.findById(userDetails.getId()).orElseThrow(() -> new MemberNotFoundException("Member not found"));
+        System.out.println("connectedMember = " + connectedMember);
         return offerRepository.findAll().stream()
                 .filter(offer -> offer.getAssociation().getId() == connectedMember.getAssociation().getId())
                 .map(offer -> new OfferResponseModel(offer))

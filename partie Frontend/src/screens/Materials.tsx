@@ -1,5 +1,5 @@
 import { Box, Grid, styled, Typography } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Material } from '../components/Material';
 import { PageTitle } from '../components/PageTitle';
 import { TabsButtons } from '../components/Tabs';
@@ -17,13 +17,23 @@ export const MaterialsPage = () => {
       auth: { token, user },
     },
   } = useContext(Store);
-  const { data: categories, error, isLoading } = useCategories();
+  const { data: allCategories, error, isLoading } = useCategories();
   const {
     data: materials,
     error: errorMaterials,
     isLoading: loadingMaterials,
   } = useMaterials();
   const { mutate: demandMaterial } = useDemandOffer();
+
+  const categories = useMemo(
+    () => {
+      if (allCategories) {
+        return [{ id: '0', name: 'Tout' }, ...allCategories]
+      }
+      return [{ id: '0', name: 'Tout' }]
+    },
+    [allCategories]
+  );
 
   const sendDemand = (id: string) => {
     demandMaterial({ id, token });

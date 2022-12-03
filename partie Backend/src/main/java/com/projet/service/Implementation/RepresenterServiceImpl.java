@@ -104,7 +104,9 @@ public class RepresenterServiceImpl implements RepresenterService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member member = memberRepository.findById(userDetails.getId())
                 .orElseThrow(() -> new RuntimeException("L'utilisateur avec l'id " + userDetails.getId() + " n'existe pas"));
+        System.out.println("asso id" + member.getAssociation().getId());
         List<Demand> demands =  demandRepository.findByOfferAssociationId(member.getAssociation().getId());
+        System.out.println("demands" + demands);
         Set<DemandsModel> demandsModels = new HashSet<>();
         for (Demand demand : demands) {
             demandsModels.add(DemandsModel.builder()
